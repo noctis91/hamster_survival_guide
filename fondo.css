@@ -57,3 +57,29 @@
     filter: drop-shadow(0 0 10px rgba(245,158,11,0.4)); /* Brillo de fuerza (STR) */
     transition: transform 0.2s ease;
 }
+/* --- BANNER DE REFERIDOS (ROLLERCOIN) --- */
+
+.rollercoin-banner-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 25px 0; /* Espaciado generoso para que no agobie */
+    padding: 0 15px;
+    z-index: 10; /* Asegura que esté por encima del fondo */
+    position: relative;
+}
+
+.rc-banner {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px; /* Bordes redondeados estilo moderno */
+    border: 1px solid rgba(56, 189, 248, 0.3); /* Borde neón sutil a juego con el gimnasio */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(56, 189, 248, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto al pasar el ratón para invitar al clic */
+.rc-banner:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.4);
+}
