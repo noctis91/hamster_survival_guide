@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RollerCoin Hamster Survival Pro - Nivelable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="fondo.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .header-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .hamster-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+        }
+
+        .stat-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #334155;
+            overflow: hidden;
+        }
+
+        .stat-fill-hp {
+            background-color: #ef4444;
+        }
+
+        .stat-fill-str {
+            background-color: #f59e0b;
+        }
+
+        .stat-fill-luck {
+            background-color: #10b981;
+        }
+
+        select,
+        input[type="number"] {
+            background-color: #1e293b;
+            border: 1px solid #38bdf8;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            outline: none;
+        }
+
+        input[type="number"]:focus {
+            box-shadow: 0 0 5px #38bdf8;
+        }
+
+        .gen-title {
+            border-left: 4px solid #38bdf8;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .warning-text {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .bonus-badge {
+            font-size: 0.7rem;
+            background: #065f46;
+            color: #34d399;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .limit-info {
+            border: 1px solid #1e293b;
+            background: #0f172a;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <header class="max-w-6xl mx-auto text-center mb-10">
+        <h1 class="header-font text-3xl md:text-5xl font-bold text-sky-400 mb-2">HAMSTER SURVIVAL CALCULATOR</h1>
+        <p class="text-slate-400">Rules: Minimums locked and maximum of +49 total points</p>
+    </header>
+
+    <section
+        class="max-w-5xl mx-auto mb-16 p-6 bg-slate-800 rounded-xl border-2 border-sky-500 shadow-[0_0_20px_rgba(56,189,248,0.2)]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <div class="lg:col-span-4 space-y-4">
+
+                <!-- VISOR DE HÁMSTER CON FONDO DE GIMNASIO -->
+                <div id="hamsterImgContainer"
+                    class="relative overflow-hidden rounded-xl border border-white/10 h-[9.6rem] mb-4 shadow-lg"
+                    style="display: none;">
+                    <!-- Capas del gimnasio cargadas desde fondo.css -->
+                    <div class="gym-container">
+                        <div class="neon-pillar" style="left: 15%;"></div>
+                        <div class="neon-pillar" style="right: 15%;"></div>
+                        <div class="gym-floor"></div>
+                        <div class="gym-mist"></div>
+                    </div>
+
+                    <!-- Hámster (Centrado y maximizado) -->
+                    <div class="relative flex h-full items-end justify-center overflow-hidden px-2 pb-0">
+                        <img id="hamsterImg" src="" alt="Hamster"
+                            class="pixel-hamster absolute left-1/2 h-auto max-w-none -translate-x-1/2 object-contain object-bottom bottom-0 w-[162%]">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">1. Choose Hamster:</label>
+                    <select id="hamsterSelect" onchange="loadHamsterStats()"></select>
+                </div>
+                <!-- Añadir esto justo antes de la Dificultad -->
+                <div id="ultimateContainer"
+                    class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
+                    <input type="checkbox" id="ultimateToggle" class="w-5 h-5 cursor-pointer"
+                        onchange="toggleUltimate()">
+                    <label for="ultimateToggle"
+                        class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (100%
+                        Stats)</label>
+                </div>
+                <div id="ultimateContainerAutoWin"
+                    class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
+                    <!-- Cambiamos el ID a ultimateAutoWinToggle y la función a toggleAutoWin -->
+                    <input type="checkbox" id="ultimateAutoWinToggle" class="w-5 h-5 cursor-pointer"
+                        onchange="toggleAutoWin()">
+                    <label for="ultimateAutoWinToggle"
+                        class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (100% Win Rate)</label>
+                </div>
+                <div>
+                    <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">2. Mission Difficulty:</label>
+                    <select id="diffSelect" onchange="calculate()">
+                        <option value="1">Level 1 (+5.00%)</option>
+                        <option value="2">Level 2 (+3.89%)</option>
+                        <option value="3">Level 3 (+2.78%)</option>
+                        <option value="4">Level 4 (+1.67%)</option>
+                        <option value="5">Level 5 (+0.56%)</option>
+                        <option value="6">Level 6 (-0.56%)</option>
+                        <option value="7">Level 7 (-1.67%)</option>
+                        <option value="8">Level 8 (-2.78%)</option>
+                        <option value="9">Level 9 (-3.89%)</option>
+                        <option value="10">Level 10 (-5.00%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ESTA ES LA COLUMNA CENTRAL: REEMPLÁZALA COMPLETA -->
+            <div class="lg:col-span-4 bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                <h4 class="text-xs font-bold text-slate-400 uppercase mb-4 text-center">3. Stat Adjustment (Máx +49
+                    pts)</h4>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold w-12 text-red-400">HP:</span>
+                            <input type="range" id="inputHP" class="w-full accent-red-500 cursor-pointer"
+                                oninput="handleSlider(this, 'hp')">
+                            <span id="valHP" class="text-sm font-bold w-8 text-right text-white">0</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold w-12 text-amber-400">STR:</span>
+                            <input type="range" id="inputSTR" class="w-full accent-amber-500 cursor-pointer"
+                                oninput="handleSlider(this, 'str')">
+                            <span id="valSTR" class="text-sm font-bold w-8 text-right text-white">0</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold w-12 text-emerald-400">LUCK:</span>
+                            <input type="range" id="inputLUCK" class="w-full accent-emerald-500 cursor-pointer"
+                                oninput="handleSlider(this, 'luck')">
+                            <span id="valLUCK" class="text-sm font-bold w-8 text-right text-white">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info de puntos extra (Necesario para que calculate() funcione) -->
+                <div class="limit-info mt-4">
+                    <div class="flex justify-between text-[10px] mb-1">
+                        <span class="text-slate-400 uppercase font-bold">Extra Points</span>
+                        <span id="extraPointsLabel" class="text-sky-400 font-bold">0 / 49</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5">
+                        <div id="pointsBar" class="bg-sky-400 h-full rounded-full transition-all" style="width: 0%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="lg:col-span-4 flex flex-col items-center justify-center bg-sky-500/10 rounded-lg border border-sky-500/30 p-6">
+                <span class="text-xs uppercase text-sky-300 font-bold mb-1">Survival Rate</span>
+                <span id="finalResult" class="text-6xl font-bold text-white">0%</span>
+                <div class="mt-4 text-xs text-slate-400 text-center">
+                    Total Stats: <span id="sumLabel" class="text-white font-bold">0</span><br>
+                    Base Chance: <span id="baseLabel" class="text-sky-400">0%</span> | Mod: <span id="diffLabel">0%</span><br>
+                    Survival Passive: <span id="bonusLabel" class="text-emerald-400 font-bold">0%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-6xl mx-auto">
+        <div class="mb-12">
+            <h2 class="header-font text-2xl text-white gen-title">FIRST GENERATION</h2>
+            <div id="gen1Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </div>
+        <div class="mb-12">
+            <h2 class="header-font text-2xl text-white gen-title" style="border-color: #a855f7;">SECOND GENERATION</h2>
+            <div id="gen2Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </div>
+    </main>
+
+    <script>
+        // Añadir al inicio del script
+        let userStatsCache = { hp: 0, str: 0, luck: 0 };
+        function toggleAutoWin() {
+            // Esta habilidad no bloquea inputs, solo afecta al resultado final
+            calculate();
+        }
+
+        const survivalTable = [
+            { sum: 50, prob: 20.38 }, { sum: 100, prob: 24.71 }, { sum: 150, prob: 33.83 },
+            { sum: 185, prob: 43.07 }, { sum: 200, prob: 47.75 }, { sum: 215, prob: 52.86 },
+            { sum: 220, prob: 54.66 }, { sum: 250, prob: 66.47 }, { sum: 275, prob: 77.64 },
+            { sum: 300, prob: 90.00 }
+        ];
+
+        const difficultyImpact = {
+            1: 5.00, 2: 3.89, 3: 2.78, 4: 1.67, 5: 0.56,
+            6: -0.56, 7: -1.67, 8: -2.78, 9: -3.89, 10: -5.00
+        };
+
+        const hamsters = [
+            { name: "Cowham", gen: 1, hp: 40, str: 30, luck: 40, bonus: 0, img: "img/cowham.gif" },
+            { name: "Guile", gen: 1, hp: 50, str: 30, luck: 20, bonus: 5, img: "img/guile.gif" },
+            { name: "Big Daddy", gen: 1, hp: 50, str: 90, luck: 50, bonus: 0, img: "img/big_daddy.gif" },
+            { name: "The Dracula", gen: 1, hp: 10, str: 50, luck: 90, bonus: 0, img: "img/the_dracula.gif" },
+            { name: "The Hamster", gen: 1, hp: 20, str: 10, luck: 20, bonus: 0, img: "img/the_hamster.gif" },
+            { name: "Naughty Claus", gen: 1, hp: 85, str: 45, luck: 55, bonus: 10, img: "img/naughty_claus.gif" },
+            { name: "Uncle", gen: 1, hp: 85, str: 85, luck: 30, bonus: 0, img: "img/uncle.gif" },
+            { name: "Birthday Bob", gen: 1, hp: 30, str: 30, luck: 10, bonus: 0, img: "img/birthday_bob.gif" },
+            { name: "Valkirita", gen: 1, hp: 90, str: 90, luck: 25, bonus: 0, img: "img/valkirita.gif" },
+            { name: "Banjo Walker", gen: 1, hp: 65, str: 30, luck: 80, bonus: 0, img: "img/banjo_walker.gif" },
+            { name: "Dusty McUncle", gen: 1, hp: 80, str: 80, luck: 40, bonus: 0, img: "img/dusty_mcuncle.gif" },
+            { name: "Mamita", gen: 1, hp: 85, str: 30, luck: 85, bonus: 0, img: "img/mamita.gif" },
+            { name: "Plague Dancer", gen: 2, hp: 25, str: 90, luck: 80, bonus: 15, img: "img/plague_dancer.gif" },
+            { name: "Anomaly", gen: 2, hp: 60, str: 60, luck: 40, bonus: 0, img: "img/anomaly.gif", hasUltimate: true },
+            { name: "Lord Hexron", gen: 2, hp: 85, str: 85, luck: 35, bonus: 0, img: "img/lord_hexron.gif" },
+            { name: "Sir Catch-a-Lot", gen: 2, hp: 45, str: 75, luck: 95, bonus: 0, img: "img/sir_catchalot.gif" },
+            { name: "Lucky Red", gen: 2, hp: 70, str: 80, luck: 50, bonus: 0, img: "img/lucky_red.gif", hasAutoWin: true },
+            { name: "Partello", gen: 2, hp: 20, str: 35, luck: 35, bonus: 0, img: "img/partello.gif" },
+            { name: "Kitsumi", gen: 2, hp: 90, str: 40, luck: 90, bonus: 0, img: "img/kitsumi.gif" },
+            { name: "Hammy Hooks", gen: 2, hp: 80, str: 80, luck: 45, bonus: 10, img: "img/hammy_hooks.gif", hasUltimate: true }
+        ];
+
+        function getBaseProb(sum) {
+            if (sum <= 50) return 20.38;
+            if (sum >= 300) return 90.00;
+            for (let i = 0; i < survivalTable.length - 1; i++) {
+                let p1 = survivalTable[i], p2 = survivalTable[i + 1];
+                if (sum >= p1.sum && sum <= p2.sum) {
+                    return p1.prob + (sum - p1.sum) * (p2.prob - p1.prob) / (p2.sum - p1.sum);
+                }
+            }
+            return 0;
+        }
+
+        // 1. GESTIÓN DE SLIDERS: Controla que no pasen de +49 puntos
+        function handleSlider(activeSlider, type) {
+            const h = hamsters[document.getElementById('hamsterSelect').value];
+            const hpS = document.getElementById('inputHP');
+            const strS = document.getElementById('inputSTR');
+            const luckS = document.getElementById('inputLUCK');
+
+            let totalExtra = (parseInt(hpS.value) - h.hp) +
+                (parseInt(strS.value) - h.str) +
+                (parseInt(luckS.value) - h.luck);
+
+            if (totalExtra > 49) {
+                const exceso = totalExtra - 49;
+                activeSlider.value = parseInt(activeSlider.value) - exceso;
+            }
+
+            document.getElementById('valHP').innerText = hpS.value;
+            document.getElementById('valSTR').innerText = strS.value;
+            document.getElementById('valLUCK').innerText = luckS.value;
+
+            calculate();
+        }
+
+        // 2. CARGA DE DATOS: Configura los sliders cuando cambias de hámster
+        function loadHamsterStats() {
+            const h = hamsters[document.getElementById('hamsterSelect').value];
+            const hpS = document.getElementById('inputHP');
+            const strS = document.getElementById('inputSTR');
+            const luckS = document.getElementById('inputLUCK');
+
+            // Reset de habilidades ultimate
+            document.getElementById('ultimateToggle').checked = false;
+            document.getElementById('ultimateAutoWinToggle').checked = false;
+            hpS.disabled = strS.disabled = luckS.disabled = false;
+
+            // Mostrar/Ocultar contenedores de habilidad
+            document.getElementById('ultimateContainer').classList.toggle('hidden', !h.hasUltimate);
+            document.getElementById('ultimateContainerAutoWin').classList.toggle('hidden', !h.hasAutoWin);
+
+            // Ajustar mínimos y valores base de los sliders
+            hpS.min = h.hp; hpS.value = h.hp;
+            strS.min = h.str; strS.value = h.str;
+            luckS.min = h.luck; luckS.value = h.luck;
+
+            // Actualizar etiquetas numéricas
+            document.getElementById('valHP').innerText = h.hp;
+            document.getElementById('valSTR').innerText = h.str;
+            document.getElementById('valLUCK').innerText = h.luck;
+
+            // Imagen del hámster
+            const imgElement = document.getElementById('hamsterImg');
+            if (h.img) {
+                imgElement.src = h.img;
+                document.getElementById('hamsterImgContainer').style.display = 'block';
+            }
+
+            calculate();
+        }
+
+        // 3. CÁLCULO FINAL: Suma todo y saca el porcentaje
+        function calculate() {
+            const h = hamsters[document.getElementById('hamsterSelect').value];
+
+            // 1. Leemos el valor de los sliders (al ser sliders, el valor siempre es un número válido)
+            const hp = parseInt(document.getElementById('inputHP').value);
+            const str = parseInt(document.getElementById('inputSTR').value);
+            const luck = parseInt(document.getElementById('inputLUCK').value);
+            const diff = document.getElementById('diffSelect').value;
+
+            const totalSum = hp + str + luck;
+
+            // 2. Calculamos los puntos extra reales
+            const extra = totalSum - (h.hp + h.str + h.luck);
+
+            // 3. Actualizamos la etiqueta de texto (ej. 95 / 49)
+            document.getElementById('extraPointsLabel').innerText = `${extra} / 49`;
+
+            // 4. FIX VISUAL: Limitamos el ancho de la barra al 100% con Math.min
+            // Aunque el extra sea superior a 49, la barra no se saldrá de su contenedor[cite: 3]
+            const visualPercentage = Math.min((extra / 49) * 100, 100);
+            document.getElementById('pointsBar').style.width = `${visualPercentage}%`;
+
+            // 5. Ajustamos el color y brillo de la barra si alcanza el máximo
+            if (extra >= 49) {
+                document.getElementById('pointsBar').className = "bg-amber-500 h-full rounded-full transition-all shadow-[0_0_10px_#f59e0b]";
+            } else {
+                document.getElementById('pointsBar').className = "bg-sky-400 h-full rounded-full transition-all";
+            }
+
+            // 6. Cálculos de probabilidad
+            const baseProb = getBaseProb(totalSum);
+            const influence = difficultyImpact[diff];
+
+            // Verificamos si la habilidad de "Siempre Gana" está activa
+            const isAutoWin = document.getElementById('ultimateAutoWinToggle').checked;
+
+            let finalDisplay;
+            if (isAutoWin) {
+                finalDisplay = 100.00;
+            } else {
+                // Probabilidad base + dificultad + bono del hámster, limitada entre 0 y 100
+                finalDisplay = Math.min(Math.max(baseProb + influence + h.bonus, 0), 100);
+            }
+
+            // 7. Renderizar resultados finales en la interfaz
+            document.getElementById('sumLabel').innerText = totalSum;
+            document.getElementById('baseLabel').innerText = baseProb.toFixed(2) + "%";
+            document.getElementById('diffLabel').innerText = (influence > 0 ? "+" : "") + influence + "%";
+            document.getElementById('diffLabel').className = influence >= 0 ? "text-green-400" : "text-red-400";
+            document.getElementById('bonusLabel').innerText = h.bonus + "%";
+            document.getElementById('finalResult').innerText = finalDisplay.toFixed(2) + "%";
+        }
+
+        // 4. HABILIDAD ULTIMATE: Setea todo al 100
+        function toggleUltimate() {
+            const isChecked = document.getElementById('ultimateToggle').checked;
+            const hpS = document.getElementById('inputHP');
+            const strS = document.getElementById('inputSTR');
+            const luckS = document.getElementById('inputLUCK');
+
+            if (isChecked) {
+                userStatsCache = { hp: hpS.value, str: strS.value, luck: luckS.value };
+                hpS.value = strS.value = luckS.value = 100;
+                hpS.disabled = strS.disabled = luckS.disabled = true;
+            } else {
+                hpS.value = userStatsCache.hp;
+                strS.value = userStatsCache.str;
+                luckS.value = userStatsCache.luck;
+                hpS.disabled = strS.disabled = luckS.disabled = false;
+            }
+
+            document.getElementById('valHP').innerText = hpS.value;
+            document.getElementById('valSTR').innerText = strS.value;
+            document.getElementById('valLUCK').innerText = luckS.value;
+            calculate();
+        }
+
+
+        function selectHamster(index) {
+            const select = document.getElementById('hamsterSelect');
+            select.value = index;
+            loadHamsterStats();
+
+            // Opcional: Hace scroll suave hacia arriba para ver la calculadora
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+
+
+        function init() {
+            hamsters.forEach((h, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.text = `[Gen ${h.gen}] ${h.name} ${h.bonus > 0 ? '(+' + h.bonus + '%)' : ''}`;
+                document.getElementById('hamsterSelect').add(opt);
+
+                const card = `
+            <div class="hamster-card p-4 rounded-lg text-sm border-l-4 ${h.gen === 1 ? 'border-sky-500' : 'border-purple-500'} cursor-pointer hover:bg-slate-700/50 transition-all group" 
+                 onclick="selectHamster(${index})">
+                <div class="flex flex-col items-center mb-3">
+                    <!-- Contenedor con posición relativa y desbordamiento oculto -->
+                    <div class="relative w-20 h-20 bg-slate-900/50 rounded-lg overflow-hidden border border-white/5 mb-2 shadow-inner">
+                        <!-- Imagen con zoom (200%) y centrada abajo como en el visor principal -->
+                        <img src="${h.img}" alt="${h.name}" 
+                             class="pixel-hamster absolute bottom-0 left-1/2 -translate-x-1/2 w-[200%] max-w-none h-auto object-contain object-bottom transform group-hover:scale-110 transition-transform">
+                    </div>
+                    
+                    <div class="text-center w-full">
+                        <div class="flex justify-center items-center gap-2">
+                            <span class="font-bold text-white text-base">${h.name}</span>
+                            ${h.bonus > 0 ? `<span class="bonus-badge text-[10px]">+${h.bonus}%</span>` : ''}
+                        </div>
+                        <div class="text-[10px] text-slate-500 italic mt-1">Suma Base: ${h.hp + h.str + h.luck}</div>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5 opacity-90">
+                    <div class="stat-bar"><div class="stat-fill-hp h-full" style="width:${h.hp}%"></div></div>
+                    <div class="stat-bar"><div class="stat-fill-str h-full" style="width:${h.str}%"></div></div>
+                    <div class="stat-bar"><div class="stat-fill-luck h-full" style="width:${h.luck}%"></div></div>
+                </div>
+            </div>
+        `;
+                document.getElementById(h.gen === 1 ? 'gen1Grid' : 'gen2Grid').innerHTML += card;
+            });
+            loadHamsterStats();
+        }
+        init();
+    </script>
+</body>
+
+</html>
