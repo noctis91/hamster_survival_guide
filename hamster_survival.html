@@ -130,7 +130,7 @@
                     <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">1. Choose Hamster:</label>
                     <select id="hamsterSelect" onchange="loadHamsterStats()"></select>
                 </div>
-                
+
                 <div id="ultimateContainer"
                     class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
                     <input type="checkbox" id="ultimateToggle" class="w-5 h-5 cursor-pointer"
@@ -146,6 +146,14 @@
                     <label for="ultimateAutoWinToggle"
                         class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (100% Win
                         Rate)</label>
+                </div>
+                <div id="ultimateContainerOverFlow"
+                    class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
+                    <input type="checkbox" id="ultimateOverFlowToggle" class="w-5 h-5 cursor-pointer"
+                        onchange="toggleOverFlow()">
+                    <label for="ultimateOverFlowToggle"
+                        class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (Increase max
+                        level stats)</label>
                 </div>
                 <div>
                     <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">2. Mission Difficulty:</label>
@@ -240,8 +248,9 @@
     </main>
 
     <script>
-       
+
         let userStatsCache = { hp: 0, str: 0, luck: 0 };
+
         function toggleAutoWin() {
             // Esta habilidad no bloquea inputs, solo afecta al resultado final
             calculate();
@@ -278,7 +287,7 @@
             { name: "Sir Catch-a-Lot", gen: 2, hp: 45, str: 75, luck: 95, bonus: 0, img: "img/sir_catchalot.gif" },
             { name: "Lucky Red", gen: 2, hp: 70, str: 80, luck: 50, bonus: 0, img: "img/lucky_red.gif", hasAutoWin: true },
             { name: "Partello", gen: 2, hp: 20, str: 35, luck: 35, bonus: 0, img: "img/partello.gif" },
-            { name: "Kitsumi", gen: 2, hp: 90, str: 40, luck: 90, bonus: 0, img: "img/kitsumi.gif" },
+            { name: "Kitsumi", gen: 2, hp: 90, str: 40, luck: 90, bonus: 0, img: "img/kitsumi.gif", hasOverFlow: true },
             { name: "Hammy Hooks", gen: 2, hp: 80, str: 80, luck: 45, bonus: 10, img: "img/hammy_hooks.gif", hasUltimate: true }
         ];
 
@@ -301,14 +310,18 @@
             const strS = document.getElementById('inputSTR');
             const luckS = document.getElementById('inputLUCK');
 
+            const isOverFlowActive = document.getElementById('ultimateOverFlowToggle').checked;
+
             let totalExtra = (parseInt(hpS.value) - h.hp) +
                 (parseInt(strS.value) - h.str) +
                 (parseInt(luckS.value) - h.luck);
 
-            if (totalExtra > 49) {
+            // Si NO está activo el Overflow, aplicamos el límite de 49
+            if (!isOverFlowActive && totalExtra > 49) {
                 const exceso = totalExtra - 49;
                 activeSlider.value = parseInt(activeSlider.value) - exceso;
             }
+            // Si ESTÁ activo, no hacemos nada, permitiendo que lleguen a 100 cada uno
 
             document.getElementById('valHP').innerText = hpS.value;
             document.getElementById('valSTR').innerText = strS.value;
@@ -327,11 +340,13 @@
             // Reset de habilidades ultimate
             document.getElementById('ultimateToggle').checked = false;
             document.getElementById('ultimateAutoWinToggle').checked = false;
+            document.getElementById('ultimateOverFlowToggle').checked = false;
             hpS.disabled = strS.disabled = luckS.disabled = false;
 
             // Mostrar/Ocultar contenedores de habilidad
             document.getElementById('ultimateContainer').classList.toggle('hidden', !h.hasUltimate);
             document.getElementById('ultimateContainerAutoWin').classList.toggle('hidden', !h.hasAutoWin);
+            document.getElementById('ultimateContainerOverFlow').classList.toggle('hidden', !h.hasOverFlow);
 
             // Ajustar mínimos y valores base de los sliders
             hpS.min = h.hp; hpS.value = h.hp;
@@ -355,56 +370,66 @@
 
         // 3. CÁLCULO FINAL: Suma todo y saca el porcentaje
         function calculate() {
-            const h = hamsters[document.getElementById('hamsterSelect').value];
+            const h = hamsters[document.getElementById('hamsterSelect').value]; //
 
-            // 1. Leemos el valor de los sliders (al ser sliders, el valor siempre es un número válido)
-            const hp = parseInt(document.getElementById('inputHP').value);
-            const str = parseInt(document.getElementById('inputSTR').value);
-            const luck = parseInt(document.getElementById('inputLUCK').value);
-            const diff = document.getElementById('diffSelect').value;
+            // 1. Obtenemos los valores actuales de los sliders y la dificultad
+            const hp = parseInt(document.getElementById('inputHP').value); //
+            const str = parseInt(document.getElementById('inputSTR').value); //
+            const luck = parseInt(document.getElementById('inputLUCK').value); //[cite: 2]
+            const diff = document.getElementById('diffSelect').value; //[cite: 2]
 
-            const totalSum = hp + str + luck;
+            const totalSum = hp + str + luck; //[cite: 2]
 
-            // 2. Calculamos los puntos extra reales
-            const extra = totalSum - (h.hp + h.str + h.luck);
+            // 2. Verificamos si la habilidad Overflow está activa
+            const isOverFlowActive = document.getElementById('ultimateOverFlowToggle').checked; //[cite: 2]
 
-            // 3. Actualizamos la etiqueta de texto (ej. 95 / 49)
-            document.getElementById('extraPointsLabel').innerText = `${extra} / 49`;
+            // 3. Calculamos los puntos extra invertidos
+            const extra = totalSum - (h.hp + h.str + h.luck); //[cite: 2]
 
-            // 4. FIX VISUAL: Limitamos el ancho de la barra al 100% con Math.min
-            // Aunque el extra sea superior a 49, la barra no se saldrá de su contenedor[cite: 3]
-            const visualPercentage = Math.min((extra / 49) * 100, 100);
-            document.getElementById('pointsBar').style.width = `${visualPercentage}%`;
+            // 4. Actualizamos el texto del límite dinámicamente (MAX si hay Overflow activo)
+            const currentLimitLabel = isOverFlowActive ? "MAX" : "49"; //[cite: 2]
+            document.getElementById('extraPointsLabel').innerText = `${extra} / ${currentLimitLabel}`; //[cite: 2]
 
-            // 5. Ajustamos el color y brillo de la barra si alcanza el máximo
-            if (extra >= 49) {
-                document.getElementById('pointsBar').className = "bg-amber-500 h-full rounded-full transition-all shadow-[0_0_10px_#f59e0b]";
+            // 5. Calculamos el porcentaje visual de la barra de progreso
+            // Si Overflow está activo, el máximo posible es la suma de llevar todo a 100 (300) menos la base[cite: 2]
+            const maxPossibleExtra = isOverFlowActive ? (300 - (h.hp + h.str + h.luck)) : 49; //[cite: 2]
+            const visualPercentage = Math.min((extra / maxPossibleExtra) * 100, 100); //[cite: 2]
+            document.getElementById('pointsBar').style.width = `${visualPercentage}%`; //[cite: 2]
+
+            // 6. Ajustamos el color y brillo de la barra si alcanza su límite correspondiente
+            if (extra >= (isOverFlowActive ? maxPossibleExtra : 49)) { //[cite: 2]
+                document.getElementById('pointsBar').className = "bg-amber-500 h-full rounded-full transition-all shadow-[0_0_10px_#f59e0b]"; //[cite: 2]
             } else {
-                document.getElementById('pointsBar').className = "bg-sky-400 h-full rounded-full transition-all";
+                document.getElementById('pointsBar').className = "bg-sky-400 h-full rounded-full transition-all"; //[cite: 2]
             }
 
-            // 6. Cálculos de probabilidad
-            const baseProb = getBaseProb(totalSum);
-            const influence = difficultyImpact[diff];
+            // 7. Cálculos de probabilidad de supervivencia
+            const baseProb = getBaseProb(totalSum); //[cite: 2]
+            const influence = difficultyImpact[diff]; //[cite: 2]
 
-            // Verificamos si la habilidad de "Siempre Gana" está activa
-            const isAutoWin = document.getElementById('ultimateAutoWinToggle').checked;
+            // Comprobamos si las otras habilidades especiales están activas
+            const isAutoWin = document.getElementById('ultimateAutoWinToggle').checked; //[cite: 2]
+            const isFullStats = document.getElementById('ultimateToggle').checked; //[cite: 2]
 
             let finalDisplay;
             if (isAutoWin) {
-                finalDisplay = 100.00;
+                finalDisplay = 100.00; //[cite: 2]
+            } else if (isFullStats) {
+                // Si la habilidad de Anomaly/Hammy Hooks está activa, calculamos con stats al 100
+                const maxStatsProb = getBaseProb(300); //[cite: 2]
+                finalDisplay = Math.min(Math.max(maxStatsProb + influence + h.bonus, 0), 100); //[cite: 2]
             } else {
-                // Probabilidad base + dificultad + bono del hámster, limitada entre 0 y 100
-                finalDisplay = Math.min(Math.max(baseProb + influence + h.bonus, 0), 100);
+                // Cálculo normal: Probabilidad base + dificultad + bono del hámster
+                finalDisplay = Math.min(Math.max(baseProb + influence + h.bonus, 0), 100); //[cite: 2]
             }
 
-            // 7. Renderizar resultados finales en la interfaz
-            document.getElementById('sumLabel').innerText = totalSum;
-            document.getElementById('baseLabel').innerText = baseProb.toFixed(2) + "%";
-            document.getElementById('diffLabel').innerText = (influence > 0 ? "+" : "") + influence + "%";
-            document.getElementById('diffLabel').className = influence >= 0 ? "text-green-400" : "text-red-400";
-            document.getElementById('bonusLabel').innerText = h.bonus + "%";
-            document.getElementById('finalResult').innerText = finalDisplay.toFixed(2) + "%";
+            // 8. Renderizamos los resultados finales en la interfaz
+            document.getElementById('sumLabel').innerText = totalSum; //[cite: 2]
+            document.getElementById('baseLabel').innerText = baseProb.toFixed(2) + "%"; //[cite: 2]
+            document.getElementById('diffLabel').innerText = (influence > 0 ? "+" : "") + influence + "%"; //[cite: 2]
+            document.getElementById('diffLabel').className = influence >= 0 ? "text-green-400" : "text-red-400"; //[cite: 2]
+            document.getElementById('bonusLabel').innerText = h.bonus + "%"; //[cite: 2]
+            document.getElementById('finalResult').innerText = finalDisplay.toFixed(2) + "%"; //[cite: 2]
         }
 
         // 4. HABILIDAD ULTIMATE: Setea todo al 100
@@ -428,6 +453,16 @@
             document.getElementById('valHP').innerText = hpS.value;
             document.getElementById('valSTR').innerText = strS.value;
             document.getElementById('valLUCK').innerText = luckS.value;
+            calculate();
+        }
+
+        function toggleOverFlow() {
+            const isChecked = document.getElementById('ultimateOverFlowToggle').checked;
+
+            if (!isChecked) {
+                // Si apaga el overflow, reseteamos a los stats base para forzar el límite de 49
+                loadHamsterStats();
+            }
             calculate();
         }
 
@@ -465,7 +500,7 @@
                     <div class="text-center w-full">
                         <div class="flex justify-center items-center gap-2">
                             <span class="font-bold text-white text-base">${h.name}</span>
-                            ${h.bonus > 0 ? `<span class="bonus-badge text-[10px]">+${h.bonus}%</span>` : ''}
+                            ${h.bonus > 0 ? `<span class="bonus-badge text-[10px]">+${h.bonus}% Survival</span>` : ''}
                         </div>
                         <div class="text-[10px] text-slate-500 italic mt-1">Suma Base: ${h.hp + h.str + h.luck}</div>
                     </div>
