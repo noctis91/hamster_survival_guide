@@ -2,6 +2,13 @@
 <html lang="es">
 
 <head>
+    <div class="fixed top-4 right-4 z-50">
+        <select id="languageSelect" onchange="changeLanguage(this.value)"
+            class="bg-slate-800 text-white border border-purple-500 rounded px-2 py-1 text-sm outline-none cursor-pointer hover:bg-slate-700">
+            <option value="en">🇺🇸 EN</option>
+            <option value="es">🇪🇸 ES</option>
+        </select>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RollerCoin Hamster Survival Pro - Nivelable</title>
@@ -97,8 +104,9 @@
 <body class="p-4 md:p-8">
 
     <header class="max-w-6xl mx-auto text-center mb-10">
-        <h1 class="header-font text-3xl md:text-5xl font-bold text-sky-400 mb-2">HAMSTER SURVIVAL CALCULATOR</h1>
-        <p class="text-slate-400">Rules: Minimums locked and maximum of +49 total points</p>
+        <h1 data-i18n="title" class="header-font text-3xl md:text-5xl font-bold text-sky-400 mb-2">HAMSTER SURVIVAL
+            CALCULATOR</h1>
+        <p data-i18n="rules" class="text-slate-400">Rules: Minimums locked and maximum of +49 total points</p>
     </header>
 
     <section
@@ -127,7 +135,8 @@
                 </div>
 
                 <div>
-                    <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">1. Choose Hamster:</label>
+                    <label data-i18n="choose_hamster" class="text-xs uppercase text-sky-400 font-bold mb-1 block">1.
+                        Choose Hamster:</label>
                     <select id="hamsterSelect" onchange="loadHamsterStats()"></select>
                 </div>
 
@@ -135,7 +144,7 @@
                     class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
                     <input type="checkbox" id="ultimateToggle" class="w-5 h-5 cursor-pointer"
                         onchange="toggleUltimate()">
-                    <label for="ultimateToggle"
+                    <label for="ultimateToggle" data-i18n="ability_full_stats"
                         class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (100%
                         Stats)</label>
                 </div>
@@ -143,7 +152,7 @@
                     class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
                     <input type="checkbox" id="ultimateAutoWinToggle" class="w-5 h-5 cursor-pointer"
                         onchange="toggleAutoWin()">
-                    <label for="ultimateAutoWinToggle"
+                    <label for="ultimateAutoWinToggle" data-i18n="ability_auto_win"
                         class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (100% Win
                         Rate)</label>
                 </div>
@@ -151,12 +160,13 @@
                     class="hidden flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-4">
                     <input type="checkbox" id="ultimateOverFlowToggle" class="w-5 h-5 cursor-pointer"
                         onchange="toggleOverFlow()">
-                    <label for="ultimateOverFlowToggle"
+                    <label for="ultimateOverFlowToggle" data-i18n="ability_overflow"
                         class="text-sm font-bold text-amber-500 uppercase cursor-pointer">Ultimate Ability (Increase max
                         level stats)</label>
                 </div>
                 <div>
-                    <label class="text-xs uppercase text-sky-400 font-bold mb-1 block">2. Mission Difficulty:</label>
+                    <label data-i18n="choose_diff" class="text-xs uppercase text-sky-400 font-bold mb-1 block">2.
+                        Mission Difficulty:</label>
                     <select id="diffSelect" onchange="calculate()">
                         <option value="1">Level 1 (+5.00%)</option>
                         <option value="2">Level 2 (+3.89%)</option>
@@ -173,7 +183,8 @@
             </div>
 
             <div class="lg:col-span-4 bg-slate-900/50 p-4 rounded-lg border border-slate-700">
-                <h4 class="text-xs font-bold text-slate-400 uppercase mb-4 text-center">3. Stat Adjustment (Máx +49
+                <h4 data-i18n="stat_adj" class="text-xs font-bold text-slate-400 uppercase mb-4 text-center">3. Stat
+                    Adjustment (Máx +49
                     pts)</h4>
                 <div class="space-y-4">
                     <div>
@@ -217,7 +228,8 @@
 
             <div
                 class="lg:col-span-4 flex flex-col items-center justify-center bg-sky-500/10 rounded-lg border border-sky-500/30 p-6">
-                <span class="text-xs uppercase text-sky-300 font-bold mb-1">Survival Rate</span>
+                <span data-i18n="survival_rate" class="text-xs uppercase text-sky-300 font-bold mb-1">Survival
+                    Rate</span>
                 <span id="finalResult" class="text-6xl font-bold text-white">0%</span>
                 <div class="mt-4 text-xs text-slate-400 text-center">
                     Total Stats: <span id="sumLabel" class="text-white font-bold">0</span><br>
@@ -228,26 +240,157 @@
             </div>
         </div>
     </section>
-    <!-- Banner de Referidos RollerCoin -->
-    <div class="rollercoin-banner-container">
-        <a href="https://rollercoin.com/?r=kh1szafs" target="_blank" rel="noopener noreferrer">
-            <img src="https://static.rollercoin.com/static/img/ref/gen2/w970h90.gif" alt="RollerCoin - Play and Earn"
-                class="rc-banner" />
-        </a>
-    </div>
-    <!-- Fin Banner -->
     <main class="max-w-6xl mx-auto">
         <div class="mb-12">
-            <h2 class="header-font text-2xl text-white gen-title">FIRST GENERATION</h2>
+            <h2 data-i18n="gen1" class="header-font text-2xl text-white gen-title">FIRST GENERATION</h2>
             <div id="gen1Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
         <div class="mb-12">
-            <h2 class="header-font text-2xl text-white gen-title" style="border-color: #a855f7;">SECOND GENERATION</h2>
+            <h2 data-i18n="gen2" class="header-font text-2xl text-white gen-title" style="border-color: #a855f7;">SECOND
+                GENERATION</h2>
             <div id="gen2Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
     </main>
 
+    <footer
+        class="max-w-6xl mx-auto mt-16 mb-12 p-6 bg-slate-900/80 rounded-xl border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-center md:text-left">
+
+            <div class="space-y-4">
+                <h3 data-i18n="wasHelpful"
+                    class="header-font text-xl font-bold text-purple-400 uppercase tracking-wide">
+                    Was this tool helpful?
+                </h3>
+                <p data-i18n="supportText" class="text-sm text-slate-400 max-w-md mx-auto md:mx-0 leading-relaxed">
+                    I developed this tool for free and without intrusive ads. If it helps you save your hamsters, please
+                    consider supporting me to keep the project active. Every donation helps!
+                </p>
+            </div>
+
+            <div class="space-y-4 bg-slate-950/60 p-5 rounded-lg border border-slate-800">
+                <h4 data-i18n="cryptoTitle" class="text-xs font-bold text-purple-300 uppercase tracking-wider">Support
+                    with Crypto</h4>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div
+                        class="flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-full border border-slate-700 hover:border-purple-500/50 transition-colors">
+                        <span class="text-xs font-bold text-slate-300">TRON (TRX)</span>
+
+                        <button onclick="copyToClipboard('TN36DH8S5hTjyugVU2rnWGCxCooNNoYHwz', this)"
+                            data-i18n="copyBtn"
+                            class="text-[10px] bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 font-bold py-1 px-3 rounded-full transition-all duration-200">
+                            Copy
+                        </button>
+
+                    </div>
+
+                    <div
+                        class="flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-full border border-slate-700 hover:border-purple-500/50 transition-colors">
+                        <span class="text-xs font-bold text-slate-300">BITCOIN (BTC)</span>
+                        <button onclick="copyToClipboard('bc1qh2vhsk53tfpn5naarq2ttztfz803e59t2t3g0k', this)"
+                            data-i18n="copyBtn"
+                            class="text-[10px] bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 font-bold py-1 px-3 rounded-full transition-all duration-200">
+                            Copy
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
     <script>
+
+        const translations = {
+            en: {
+                title: "HAMSTER SURVIVAL CALCULATOR",
+                rules: "Rules: Minimums locked and maximum of +49 total points",
+                choose_hamster: "1. Choose Hamster:",
+                choose_diff: "2. Mission Difficulty:",
+                stat_adj: "3. Stat Adjustment (Max +49 pts)",
+                survival_rate: "Survival Rate",
+                total_stats: "Total Stats:",
+                base_chance: "Base Chance:",
+                mod: "Mod:",
+                passive: "Survival Passive:",
+                gen1: "FIRST GENERATION",
+                gen2: "SECOND GENERATION",
+                wasHelpful: "Was this tool helpful?",
+                supportText: "I developed this tool for free and without intrusive ads. If it helps you save your hamsters during their expeditions, please consider supporting me to keep the project running and add new features. Every bit of support is appreciated!",
+                buyCoffee: "Buy me a coffee",
+                cryptoTitle: "Crypto Donations",
+                copyBtn: "Copy",
+                copied: "Copied!",
+                ability_full_stats: "Ultimate Ability (100% Stats)",
+                ability_auto_win: "Ultimate Ability (100% Win Rate)",
+                ability_overflow: "Ultimate Ability (Increase max level stats)",
+                sum_base: "Base Sum:",
+                level: "Level"
+            },
+            es: {
+                title: "CALCULADORA DE SUPERVIVENCIA",
+                rules: "Reglas: Mínimos bloqueados y máximo de +49 puntos totales",
+                choose_hamster: "1. Elige tu Hámster:",
+                choose_diff: "2. Dificultad de Misión:",
+                stat_adj: "3. Ajuste de Stats (Máx +49 pts)",
+                survival_rate: "Tasa de Supervivencia",
+                total_stats: "Stats Totales:",
+                base_chance: "Prob. Base:",
+                mod: "Mod:",
+                passive: "Pasiva de Supervivencia:",
+                gen1: "PRIMERA GENERACIÓN",
+                gen2: "SEGUNDA GENERACIÓN",
+                wasHelpful: "¿Te ha sido útil la herramienta?",
+                supportText: "He desarrollado esta herramienta de forma gratuita y sin publicidad invasiva. Si te ayuda a salvar tus hámsters en las expediciones, puedes apoyarme para mantener el proyecto activo. ¡Cualquier ayuda es bienvenida!",
+                buyCoffee: "Invítame a un café",
+                cryptoTitle: "Donaciones Cripto",
+                copyBtn: "Copiar",
+                copied: "¡Copiado!",
+                ability_full_stats: "Habilidad Ultimate (Stats al 100%)",
+                ability_auto_win: "Habilidad Ultimate (Victoria 100%)",
+                ability_overflow: "Habilidad Ultimate (Superar límite de nivel)",
+                sum_base: "Suma Base:",
+                level: "Nivel"
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('preferredLang', lang);
+
+            // 1. Traducir elementos estáticos con data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.innerText = translations[lang][key];
+                }
+            });
+
+            // 2. Actualizar el selector de dificultad
+            const diffSelect = document.getElementById('diffSelect');
+            const currentDiffValue = diffSelect.value;
+            diffSelect.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const impact = difficultyImpact[i];
+                const sign = impact >= 0 ? '+' : '';
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.text = `${translations[lang].level} ${i} (${sign}${impact.toFixed(2)}%)`;
+                diffSelect.add(opt);
+            }
+            diffSelect.value = currentDiffValue;
+
+            // 3. Reinicializar la cuadrícula y el selector de hámsters para traducir nombres/textos dinámicos
+            init(lang);
+            calculate();
+        }
+
+        // Al cargar la página, aplicamos el idioma guardado o el inglés por defecto
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'en';
+            document.getElementById('languageSelect').value = savedLang;
+            changeLanguage(savedLang);
+        });
 
         let userStatsCache = { hp: 0, str: 0, luck: 0 };
 
@@ -477,23 +620,51 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Función interactiva para copiar cripto-direcciones al portapapeles
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                button.classList.remove('bg-purple-500/20', 'text-purple-300');
+                button.classList.add('bg-emerald-500/20', 'text-emerald-400', 'shadow-[0_0_8px_rgba(16,185,129,0.3)]');
+
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'shadow-[0_0_8px_rgba(16,185,129,0.3)]');
+                    button.classList.add('bg-purple-500/20', 'text-purple-300');
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar la dirección: ', err);
+            });
+        }
 
 
+        function init(lang = 'en') {
+            const select = document.getElementById('hamsterSelect');
+            const gen1Grid = document.getElementById('gen1Grid');
+            const gen2Grid = document.getElementById('gen2Grid');
 
-        function init() {
+            // Guardamos el hámster que estaba seleccionado antes de limpiar
+            const selectedIdx = select.value || 0;
+
+            // Limpiamos los contenedores para evitar duplicados al cambiar de idioma
+            select.innerHTML = '';
+            gen1Grid.innerHTML = '';
+            gen2Grid.innerHTML = '';
+
             hamsters.forEach((h, index) => {
+                // 1. Actualizamos el selector (Dropdown)
                 const opt = document.createElement('option');
                 opt.value = index;
                 opt.text = `[Gen ${h.gen}] ${h.name} ${h.bonus > 0 ? '(+' + h.bonus + '%)' : ''}`;
-                document.getElementById('hamsterSelect').add(opt);
+                select.add(opt);
 
+                // 2. Creamos la carta con textos traducidos
                 const card = `
             <div class="hamster-card p-4 rounded-lg text-sm border-l-4 ${h.gen === 1 ? 'border-sky-500' : 'border-purple-500'} cursor-pointer hover:bg-slate-700/50 transition-all group" 
                  onclick="selectHamster(${index})">
                 <div class="flex flex-col items-center mb-3">
-                    <!-- Contenedor con posición relativa y desbordamiento oculto -->
                     <div class="relative w-20 h-20 bg-slate-900/50 rounded-lg overflow-hidden border border-white/5 mb-2 shadow-inner">
-                        <!-- Imagen con zoom (200%) y centrada abajo como en el visor principal -->
                         <img src="${h.img}" alt="${h.name}" 
                              class="pixel-hamster absolute bottom-0 left-1/2 -translate-x-1/2 w-[200%] max-w-none h-auto object-contain object-bottom transform group-hover:scale-110 transition-transform">
                     </div>
@@ -501,9 +672,13 @@
                     <div class="text-center w-full">
                         <div class="flex justify-center items-center gap-2">
                             <span class="font-bold text-white text-base">${h.name}</span>
-                            ${h.bonus > 0 ? `<span class="bonus-badge text-[10px]">+${h.bonus}% Survival</span>` : ''}
+                           ${h.bonus > 0 ? `
+    <div class="bonus-badge flex items-center gap-1">
+        <img src="img/survive_percent.png" alt="Survival" class="w-4 h-4 object-contain">
+        <span>+${h.bonus}%</span>
+    </div>` : ''}
                         </div>
-                        <div class="text-[10px] text-slate-500 italic mt-1">Suma Base: ${h.hp + h.str + h.luck}</div>
+                        <div class="text-[10px] text-slate-500 italic mt-1">${translations[lang].sum_base} ${h.hp + h.str + h.luck}</div>
                     </div>
                 </div>
 
@@ -514,11 +689,20 @@
                 </div>
             </div>
         `;
-                document.getElementById(h.gen === 1 ? 'gen1Grid' : 'gen2Grid').innerHTML += card;
+
+                if (h.gen === 1) {
+                    gen1Grid.innerHTML += card;
+                } else {
+                    gen2Grid.innerHTML += card;
+                }
             });
+
+            // Restauramos la selección y cargamos los stats iniciales
+            select.value = selectedIdx;
             loadHamsterStats();
         }
         init();
+
     </script>
 </body>
 
