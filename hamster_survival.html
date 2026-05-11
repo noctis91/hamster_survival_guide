@@ -250,6 +250,11 @@
                 GENERATION</h2>
             <div id="gen2Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
+        <div class="mb-12">
+            <h2 data-i18n="gen3" class="header-font text-2xl text-white gen-title" style="border-color: #a855f7;">THIRD
+                GENERATION</h2>
+            <div id="gen3Grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </div>
     </main>
 
     <footer
@@ -316,6 +321,7 @@
                 passive: "Survival Passive:",
                 gen1: "FIRST GENERATION",
                 gen2: "SECOND GENERATION",
+                gen3: "THIRD GENERATION",
                 wasHelpful: "Was this tool helpful?",
                 supportText: "I developed this tool for free and without intrusive ads. If it helps you save your hamsters during their expeditions, please consider supporting me to keep the project running and add new features. Every bit of support is appreciated!",
                 buyCoffee: "Buy me a coffee",
@@ -341,6 +347,7 @@
                 passive: "Pasiva de Supervivencia:",
                 gen1: "PRIMERA GENERACIÓN",
                 gen2: "SEGUNDA GENERACIÓN",
+                gen3: "TERCERA GENERACIÓN",
                 wasHelpful: "¿Te ha sido útil la herramienta?",
                 supportText: "He desarrollado esta herramienta de forma gratuita y sin publicidad invasiva. Si te ayuda a salvar tus hámsters en las expediciones, puedes apoyarme para mantener el proyecto activo. ¡Cualquier ayuda es bienvenida!",
                 buyCoffee: "Invítame a un café",
@@ -432,7 +439,10 @@
             { name: "Partello", gen: 2, hp: 20, str: 35, luck: 35, bonus: 0, img: "img/partello.gif" },
             { name: "Kitsumi", gen: 2, hp: 90, str: 40, luck: 90, bonus: 0, img: "img/kitsumi.gif", hasOverFlow: true },
             { name: "Hammy Hooks", gen: 2, hp: 80, str: 80, luck: 45, bonus: 10, img: "img/hammy_hooks.gif", hasUltimate: true },
-            { name: "Mr. Jack", gen: 2, hp: 25, str: 25, luck: 15, bonus: 0, img: "img/mr_jack.gif" }
+            { name: "Mr. Jack", gen: 2, hp: 25, str: 25, luck: 15, bonus: 0, img: "img/mr_jack.gif" },
+            { name: "Goodncle", gen: 2, hp: 60, str: 40, luck: 80, bonus: 0, img: "img/god_uncle.png" },
+            { name: "Badncle", gen: 2, hp: 60, str: 80, luck: 40, bonus: 0, img: "img/bad_uncle.png" },
+            { name: "Uncle’Azoth", gen: 3, hp: 85, str: 85, luck: 60, bonus: 0, img: "img/azoth.png" },
         ];
 
         function getBaseProb(sum) {
@@ -643,6 +653,7 @@
             const select = document.getElementById('hamsterSelect');
             const gen1Grid = document.getElementById('gen1Grid');
             const gen2Grid = document.getElementById('gen2Grid');
+            const gen3Grid = document.getElementById('gen3Grid');
 
             // Guardamos el hámster que estaba seleccionado antes de limpiar
             const selectedIdx = select.value || 0;
@@ -651,6 +662,7 @@
             select.innerHTML = '';
             gen1Grid.innerHTML = '';
             gen2Grid.innerHTML = '';
+            gen3Grid.innerHTML = '';
 
             hamsters.forEach((h, index) => {
                 // 1. Actualizamos el selector (Dropdown)
@@ -692,8 +704,10 @@
 
                 if (h.gen === 1) {
                     gen1Grid.innerHTML += card;
-                } else {
+                } else if (h.gen === 2) {
                     gen2Grid.innerHTML += card;
+                } else if (h.gen === 3) {
+                    gen3Grid.innerHTML += card;
                 }
             });
 
