@@ -144,6 +144,7 @@ const hamsters = [
     { name: "Mr. Jack", gen: 2, hp: 25, str: 25, luck: 15, bonus: 0, img: "img/mr_jack.gif" },
     { name: "Goodncle", gen: 2, hp: 60, str: 40, luck: 80, bonus: 0, img: "img/god_uncle.png" },
     { name: "Badncle", gen: 2, hp: 60, str: 80, luck: 40, bonus: 0, img: "img/bad_uncle.png" },
+    { name: "Joga Bonito", gen: 2, hp: 70, str: 90, luck: 50, bonus: 0, img: "img/taps.gif" },
     { name: "Uncle'Azoth", gen: 3, hp: 85, str: 85, luck: 60, bonus: 0, img: "img/azoth.png" },
 ];
 
