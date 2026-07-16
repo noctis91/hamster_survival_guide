@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RollerCoin Hamster Survival Pro - Nivelable</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="fondo.css">
     <link rel="stylesheet" href="calculadora.css">
 
@@ -109,7 +111,8 @@
     </nav>
 
     <header class="max-w-6xl mx-auto text-center px-4 mb-10 fade-in">
-        <h1 data-i18n="title" class="calc-title text-2xl md:text-4xl mb-4 leading-relaxed">HAMSTER SURVIVAL CALCULATOR</h1>
+        <h1 data-i18n="title" class="calc-title text-2xl md:text-4xl mb-4 leading-relaxed">HAMSTER SURVIVAL CALCULATOR
+        </h1>
         <p data-i18n="rules" class="text-slate-400">Rules: Minimums locked and maximum of +49 total points</p>
     </header>
 
@@ -142,6 +145,14 @@
                     <label data-i18n="choose_hamster" class="text-xs uppercase text-sky-400 font-bold mb-1 block">1.
                         Choose Hamster:</label>
                     <select id="hamsterSelect" onchange="loadHamsterStats()"></select>
+                </div>
+
+                <div id="variableBonusContainer" class="hidden mt-4">
+                    <label data-i18n="variable_bonus_label"
+                        class="text-xs uppercase text-emerald-400 font-bold mb-1 block">Hamster Survival Bonus
+                        (Ability):</label>
+                    <select id="variableBonusSelect" onchange="changeVariableBonus()"
+                        style="border-color: #10b981;"></select>
                 </div>
 
                 <div id="ultimateContainer"
@@ -302,9 +313,9 @@
                             Copy
                         </button>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
     </footer>
 

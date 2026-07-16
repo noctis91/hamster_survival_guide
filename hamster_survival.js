@@ -27,7 +27,15 @@ const translations = {
         ability_auto_win: "Ultimate Ability (100% Win Rate)",
         ability_overflow: "Ultimate Ability (Increase max level stats)",
         sum_base: "Base Sum:",
-        level: "Level"
+        level: "Level",
+        variable_bonus_label: "Hamster Bonus (Ability):",
+        bonus_disabled: "Disabled (0%)",
+        bonus_level_basic: "Basic Level (5%)",
+        bonus_level_10: "Level 10 (6%)",
+        bonus_level_20: "Level 20 (7%)",
+        bonus_level_30: "Level 30 (8%)",
+        bonus_level_40: "Level 40 (9%)",
+        bonus_level_50: "Level 50 (10%)"
     },
     es: {
         title: "CALCULADORA DE SUPERVIVENCIA",
@@ -53,7 +61,15 @@ const translations = {
         ability_auto_win: "Habilidad Ultimate (Victoria 100%)",
         ability_overflow: "Habilidad Ultimate (Superar límite de nivel)",
         sum_base: "Suma Base:",
-        level: "Nivel"
+        level: "Nivel",
+        variable_bonus_label: "Bono de Hámster (Habilidad):",
+        bonus_disabled: "Desactivado (0%)",
+        bonus_level_basic: "Nivel Básico (5%)",
+        bonus_level_10: "Nivel 10 (6%)",
+        bonus_level_20: "Nivel 20 (7%)",
+        bonus_level_30: "Nivel 30 (8%)",
+        bonus_level_40: "Nivel 40 (9%)",
+        bonus_level_50: "Nivel 50 (10%)"
     }
 };
 
@@ -147,6 +163,26 @@ const hamsters = [
     { name: "Joga Bonito", gen: 2, hp: 70, str: 90, luck: 50, bonus: 5, img: "img/taps.gif" },
     { name: "Eliza Bit", gen: 2, hp: 80, str: 20, luck: 80, bonus: 0, img: "img/pirate_girl.gif" },
     { name: "Uncle'Azoth", gen: 3, hp: 85, str: 85, luck: 60, bonus: 0, img: "img/azoth.png" },
+    {
+        name: "Captain Jack Pot",
+        gen: 3,
+        hp: 65,
+        str: 60,
+        luck: 95,
+        bonus: 0,
+        img: "img/sparrow.gif",
+        hasOverFlow: true,
+        hasVariableBonus: true,
+        bonusOptions: [
+            { value: 0, labelKey: "bonus_disabled" },
+            { value: 5, labelKey: "bonus_level_basic" },
+            { value: 6, labelKey: "bonus_level_10" },
+            { value: 7, labelKey: "bonus_level_20" },
+            { value: 8, labelKey: "bonus_level_30" },
+            { value: 9, labelKey: "bonus_level_40" },
+            { value: 10, labelKey: "bonus_level_50" }
+        ]
+    },
 ];
 
 // ============================================
@@ -217,6 +253,25 @@ function loadHamsterStats() {
     document.getElementById('ultimateContainer').classList.toggle('hidden', !h.hasUltimate);
     document.getElementById('ultimateContainerAutoWin').classList.toggle('hidden', !h.hasAutoWin);
     document.getElementById('ultimateContainerOverFlow').classList.toggle('hidden', !h.hasOverFlow);
+
+    // Mostrar/Ocultar contenedor de bono variable
+    const varBonusContainer = document.getElementById('variableBonusContainer');
+    if (h.hasVariableBonus) {
+        varBonusContainer.classList.remove('hidden');
+        const varBonusSelect = document.getElementById('variableBonusSelect');
+        const currentValue = h.bonus;
+        varBonusSelect.innerHTML = '';
+        const preferredLang = localStorage.getItem('preferredLang') || 'en';
+        h.bonusOptions.forEach(opt => {
+            const optEl = document.createElement('option');
+            optEl.value = opt.value;
+            optEl.text = translations[preferredLang][opt.labelKey] || opt.labelKey;
+            varBonusSelect.add(optEl);
+        });
+        varBonusSelect.value = currentValue;
+    } else {
+        varBonusContainer.classList.add('hidden');
+    }
 
     // Ajustar mínimos y valores base de los sliders
     hpS.min = h.hp; hpS.value = h.hp;
@@ -349,6 +404,34 @@ function toggleOverFlow() {
     calculate();
 }
 
+function changeVariableBonus() {
+    const select = document.getElementById('hamsterSelect');
+    const h = hamsters[select.value];
+    const varBonusSelect = document.getElementById('variableBonusSelect');
+    const newBonus = parseInt(varBonusSelect.value) || 0;
+    h.bonus = newBonus;
+
+    // Actualizar texto del dropdown principal
+    const option = select.options[select.selectedIndex];
+    option.text = `[Gen ${h.gen}] ${h.name} ${h.bonus > 0 ? '(+' + h.bonus + '%)' : ''}`;
+
+    // Actualizar badge en la card del grid
+    const badgeContainer = document.getElementById(`badge-container-${select.value}`);
+    if (badgeContainer) {
+        if (h.bonus > 0) {
+            badgeContainer.innerHTML = `
+                <div class="bonus-badge flex items-center gap-1">
+                    <img src="img/survive_percent.png" alt="Survival" class="w-4 h-4 object-contain">
+                    <span>+${h.bonus}%</span>
+                </div>`;
+        } else {
+            badgeContainer.innerHTML = '';
+        }
+    }
+
+    calculate();
+}
+
 // ============================================
 // SELECCIÓN DE HÁMSTER DESDE CUADRÍCULA
 // ============================================
@@ -423,11 +506,13 @@ function init(lang = 'en') {
                     <div class="text-center w-full">
                         <div class="flex justify-center items-center gap-2">
                             <span class="font-bold text-white text-base">${h.name}</span>
-                           ${h.bonus > 0 ? `
-    <div class="bonus-badge flex items-center gap-1">
-        <img src="img/survive_percent.png" alt="Survival" class="w-4 h-4 object-contain">
-        <span>+${h.bonus}%</span>
-    </div>` : ''}
+                            <div id="badge-container-${index}" class="flex items-center">
+                               ${h.bonus > 0 ? `
+                                <div class="bonus-badge flex items-center gap-1">
+                                    <img src="img/survive_percent.png" alt="Survival" class="w-4 h-4 object-contain">
+                                    <span>+${h.bonus}%</span>
+                                </div>` : ''}
+                            </div>
                         </div>
                         <div class="text-[10px] text-slate-500 italic mt-1">${translations[lang].sum_base} ${h.hp + h.str + h.luck}</div>
                     </div>
