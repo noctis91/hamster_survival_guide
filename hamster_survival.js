@@ -183,6 +183,8 @@ const hamsters = [
             { value: 10, labelKey: "bonus_level_50" }
         ]
     },
+    { name: "Davy Coins", gen: 2, hp: 80, str: 90, luck: 30, bonus: 5, img: "img/davy.gif" },
+    { name: "Gordon Hamzy", gen: 2, hp: 70, str: 85, luck: 55, bonus: 10, img: "img/chef.gif" },
 ];
 
 // ============================================
