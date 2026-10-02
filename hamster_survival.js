@@ -185,6 +185,9 @@ const hamsters = [
     },
     { name: "Davy Coins", gen: 2, hp: 80, str: 90, luck: 30, bonus: 5, img: "img/davy.gif" },
     { name: "Gordon Hamzy", gen: 2, hp: 70, str: 85, luck: 55, bonus: 10, img: "img/chef.gif" },
+    { name: "GFeast", gen: 3, hp: 70, str: 95, luck: 95, bonus: 10, img: "img/gfeast.gif" },
+    { name: "SOLaire", gen: 2, hp: 35, str: 70, luck: 70, bonus: 5, img: "img/sol.gif" },
+    { name: "Lady Minerra", gen: 2, hp: 80, str: 70, luck: 55, bonus: -5, img: "img/minerva.gif" }
 ];
 
 // ============================================
